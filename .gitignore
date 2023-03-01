@@ -1,4 +1,7 @@
-**/Makefile
+Makefile
+src/Makefile
+CMakeFiles
+src/CMakeFiles
 **/CMakeCache.txt
 *Test*
 *bin*
