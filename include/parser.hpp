@@ -62,9 +62,7 @@ class Parser {
             const char *curBuf = buf;
             
             //Get the symbol            
-            char symbuf[4] = {0};
-            memcpy(symbuf, curBuf, 3);
-            string symbol{symbuf};
+            string symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -102,9 +100,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol
-            char symbuf[4] = {0};
-            memcpy(symbuf, curBuf, 3);
-            string symbol{symbuf};
+            string symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -142,9 +138,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol        
-            char symbuf[4] = {0};
-            memcpy(symbuf, curBuf, 3);
-            string symbol{symbuf};
+            string symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -171,9 +165,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol
-            char symbuf[4] = {0};
-            memcpy(symbuf, curBuf, 3);
-            string symbol{symbuf};
+            string symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
