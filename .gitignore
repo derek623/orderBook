@@ -1,9 +1,8 @@
-Makefile
-src/Makefile
-CMakeFiles
-src/CMakeFiles
+**/Makefile
+**/CMakeFiles
 **/CMakeCache.txt
-*Test*
-*bin*
+**/*Test*
+bin
 **/cmake_install.cmake
-*lib*
+lib
+VivCourt*
