@@ -6,3 +6,4 @@ bin
 **/cmake_install.cmake
 lib
 VivCourt*
+*_dep*
