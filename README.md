@@ -22,8 +22,10 @@ For release build, type
 For debug build, type
 1) "cmake . -DCMAKE_BUILD_TYPE=Debug"
 2) make
-3) The generated binary "VivCourt" is in bin/Debug. A unit test binary is also generated in test/VivCourt_test.
-4) ctest to run the unit tests (actual test binary is generated in the orderBook/test folder). The test binary (test/VivCourt_test) can
+3) The generated binary "VivCourt" is in bin/Debug. 
+4) A unit test binary is also generated in test/VivCourt_test. This project uses gtest and cmake will download the gtest library from https://github.com/google. 
+    The dev server needs to be able to access the link.
+5) ctest to run the unit tests (actual test binary is generated in the orderBook/test folder). The test binary (test/VivCourt_test) can
     also be run on it's own.
 
 Both the debug and release build can be run like below:
