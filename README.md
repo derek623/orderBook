@@ -6,7 +6,7 @@ DEVELOPMENT PLATFORM
 
 - WSL Ubuntu 20.04.5 LTS
 - gcc version 9.4.0
-- C++ 20
+- C++ 20 (minimum)
 - cmake 3.16.3
 
 ------------------------------
@@ -17,11 +17,17 @@ Unzip the folder, then go to the orderBook folder.
 For release build, type
 1) "cmake . -DCMAKE_BUILD_TYPE=Release"
 2) make
+3) The generated binary "VivCourt" is in bin/Release 
 
 For debug build, type
-1) "cmake . -DCMAKE_BUILD_TYPE=Release"
+1) "cmake . -DCMAKE_BUILD_TYPE=Debug"
 2) make
-3) ctest to run the unit tests (actual test binary is generated in the orderBook/test folder)
+3) The generated binary "VivCourt" is in bin/Debug. A unit test binary is also generated in test/VivCourt_test.
+4) ctest to run the unit tests (actual test binary is generated in the orderBook/test folder). The test binary (test/VivCourt_test) can
+    also be run on it's own.
+
+Both the debug and release build can be run like below:
+cat input1.stream | ./VivCourt 5
 
 ------------------------------
 DESIGN
