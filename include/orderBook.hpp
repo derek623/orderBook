@@ -37,7 +37,7 @@ class OrderBook
             l.aggregatedQty += qty;   
             l.lastUpdateSeqNo = seqno;
             
-            return itr - book.begin();
+            return distance(book.begin(), itr);
         }
 
         uint64_t reduce(const uint32_t& seqno, bool side, const uint64_t& qty, const int32_t& price)
@@ -60,7 +60,7 @@ class OrderBook
             if(l.aggregatedQty <= 0)
                 itr = book.erase(itr);
 
-            return itr - book.begin();
+            return distance(book.begin(), itr);;
         }
 
         friend std::ostream &operator<<(std::ostream &out, const OrderBook &book)
