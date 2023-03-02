@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include "parser.hpp"
-//#include "oldParser.hpp"
 #include "displayHandler.hpp"
 
 int main(int argc, char** argv)

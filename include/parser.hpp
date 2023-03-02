@@ -62,7 +62,7 @@ class Parser {
             const char *curBuf = buf;
             
             //Get the symbol            
-            string symbol{buf, 3};
+            string_view symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -100,7 +100,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol
-            string symbol{buf, 3};
+            string_view symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -138,7 +138,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol        
-            string symbol{buf, 3};
+            string_view symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id
@@ -165,7 +165,7 @@ class Parser {
         {
             const char *curBuf = buf;
             //Get the symbol
-            string symbol{buf, 3};
+            string_view symbol{buf, 3};
             curBuf += 3;
             
             //Get the order id

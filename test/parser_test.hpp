@@ -5,10 +5,10 @@
 struct TestHandler {
     public:
         TestHandler(){}
-        void onQuote(const uint32_t& seqno, const std::string& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
+        void onQuote(const uint32_t& seqno, const std::string_view& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
             _ob = ob;
         }
-        void onTrade(const uint32_t& seqno, const std::string& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
+        void onTrade(const uint32_t& seqno, const std::string_view& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
             _ob = ob;
         }
 
