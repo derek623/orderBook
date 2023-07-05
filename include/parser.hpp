@@ -1,5 +1,5 @@
-#ifndef PARSER
-#define PARSER
+#ifndef __PARSER_HPP__
+#define __PARSER_HPP__
 
 #include <iostream>
 #include <fstream>
@@ -26,7 +26,7 @@ class Parser {
                 if(seqno == 0 || size == 0) // something wrong with the data
                     return;
                 
-                shared_ptr<char[]> tmp(new char[size]{0}); //prepare a buffer for storing each message
+                unique_ptr<char[]> tmp(new char[size]{0}); //prepare a buffer for storing each message
                 _s.read( tmp.get(), size );
 
                 parse(seqno, size, tmp.get());

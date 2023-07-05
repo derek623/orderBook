@@ -1,23 +1,24 @@
-#ifndef ORDERBOOK
-#define ORDERBOOK
+#ifndef __ORDERBOOK_HPP__
+#define __ORDERBOOK_HPP__
 
 #include <iostream>
 #include <boost/container/flat_map.hpp>
+#include "order.hpp"
 
 class OrderBook 
 {
-    public:
+    public:        
         struct Level {
             uint64_t aggregatedQty = 0;
             int32_t price = 0;
             uint32_t lastUpdateSeqNo = 0;
-            bool buy_or_sell;
+            Side buy_or_sell;
 
-            Level(bool bs) : buy_or_sell{bs} {}
+            Level(Side bs) : buy_or_sell{bs} {}
             Level(const uint64_t q, const int32_t p) : aggregatedQty{q}, price{p}{}
 
             friend std::ostream &operator<<(std::ostream &out, const Level &level) {
-                int32_t newPrice = level.buy_or_sell ? level.price : -level.price;
+                int32_t newPrice = Side::Buy == level.buy_or_sell ? level.price : -level.price;
                 out << "(" << newPrice << ", " << level.aggregatedQty << ")";
                 return out;
             }
@@ -25,10 +26,10 @@ class OrderBook
         OrderBook(){}
         constexpr static uint64_t INVALID_LEVEL = std::numeric_limits<uint64_t>::max();
 
-        uint64_t add(const uint32_t& seqno, bool side, const uint64_t& qty, const int32_t& price)
+        uint64_t add(const uint32_t seqno, Side side, const uint64_t qty, const int32_t price)
         {
-            auto& book = side ? _buy : _sell;
-            int32_t newPrice = side ? price : -price; //flip the price for sell order
+            auto& book = Side::Buy == side ? _buy : _sell;
+            int32_t newPrice = Side::Buy == side ? price : -price; //flip the price for sell order
 
             auto itr = book.emplace(newPrice, Level{side}).first;
             
@@ -40,10 +41,10 @@ class OrderBook
             return distance(book.begin(), itr);
         }
 
-        uint64_t reduce(const uint32_t& seqno, bool side, const uint64_t& qty, const int32_t& price)
+        uint64_t reduce(const uint32_t seqno, Side side, const uint64_t qty, const int32_t price)
         {
-            auto& book = side ? _buy : _sell;
-            int32_t newPrice = side ? price : -price; //flip the price for sell order
+            auto& book = Side::Buy == side ? _buy : _sell;
+            int32_t newPrice = Side::Buy == side ? price : -price; //flip the price for sell order
 
             auto itr = book.find(newPrice);
             if(book.end() == itr)

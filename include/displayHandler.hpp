@@ -1,5 +1,5 @@
-#ifndef DISPLAYHANDLER
-#define DISPLAYHANDLER
+#ifndef __DISPLAYHANDLER_HPP__
+#define __DISPLAYHANDLER_HPP__
 
 
 #include "orderBook.hpp"
@@ -8,15 +8,15 @@ class DisplayHandler {
     //onQuote and onTrade have the same behaviour in this test, but in real life they should behave differently
     public:
         DisplayHandler(const uint32_t displayLevel) : _displayLevel{displayLevel}{}
-        void onQuote(const uint32_t& seqno, const std::string_view& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
+        void onQuote(const uint32_t seqno, const std::string_view symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
             onUpdate(seqno, symbol, ob, lastUpdatedDepth);
         }
-        void onTrade(const uint32_t& seqno, const std::string_view& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
+        void onTrade(const uint32_t seqno, const std::string_view symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
             onUpdate(seqno, symbol, ob, lastUpdatedDepth);
         }
 
     private:
-        void onUpdate(const uint32_t& seqno, const std::string_view& symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
+        void onUpdate(const uint32_t seqno, const std::string_view symbol, const OrderBook& ob, int64_t lastUpdatedDepth){
             if(lastUpdatedDepth == std::numeric_limits<uint64_t>::max())
                 return;
 

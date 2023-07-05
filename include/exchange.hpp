@@ -1,5 +1,5 @@
-#ifndef EXCHANGE
-#define EXCHANGE
+#ifndef __EXCHANGE_HPP__
+#define __EXCHANGE_HPP__
 
 
 #include <unordered_map>
@@ -9,28 +9,12 @@
 
 template <typename Handler>
 class Exchange {
+
     public:
-        constexpr static uint16_t DEFAULT_BOOKID = std::numeric_limits<uint16_t>::max();
-        struct Order {
-            int32_t price = 0;
-            uint64_t qty = 0;
-            bool buy_sell = 0;
-            uint16_t bookid = DEFAULT_BOOKID;
-
-            Order(int32_t price, uint64_t qty, bool buy_sell, uint16_t bookid)
-                : price(price), qty(qty), buy_sell(buy_sell), bookid(bookid) {}
-            Order() {}
-
-            friend std::ostream& operator<<(std::ostream& out, const Order& o)
-            {
-                char bs = o.buy_sell ? 'B' : 'S';
-                out << " Order: " << o.price << ", " << o.qty << ", " << bs << ", " << o.bookid;
-                return out;
-            }
-        };
+        //constexpr static uint16_t DEFAULT_BOOKID = std::numeric_limits<uint16_t>::max();        
         Exchange(Handler& handler) : _handler{handler} {}
         
-        void addOrder(const uint32_t& seqno, const std::string_view& symbol, const uint64_t& orderId, const char& side, const uint64_t& qty, const int32_t& price)
+        void addOrder(const uint32_t seqno, const std::string_view symbol, const uint64_t orderId, const char side, const uint64_t qty, const int32_t price)
         {
             size_t hashCode = std::hash<std::string_view>{}(symbol);
             //Check if symbol(the hashed code) has an orderbook. If not, create one
@@ -42,7 +26,7 @@ class Exchange {
             }
 
             //insert the order to the map
-            bool bs = 'B' == side ? 1 : 0; //1 is buy, 0 is sell
+            Side bs = 'B' == side ? Side::Buy : Side::Sell;
             _orderIdToOrderMap.emplace(orderId, Order{price, qty, bs ,itr->second});
 
             //Update the orderBook
@@ -51,7 +35,7 @@ class Exchange {
             _handler.onQuote(seqno, symbol, ob, level);        
         }
 
-        void updateOrder(const uint32_t& seqno, const std::string_view& symbol, const uint64_t& orderId, const uint64_t& qty, const int32_t& price)
+        void updateOrder(const uint32_t seqno, const std::string_view symbol, const uint64_t orderId, const uint64_t qty, const int32_t price)
         {
             //find the order
             auto itr = _orderIdToOrderMap.find(orderId);
@@ -77,7 +61,7 @@ class Exchange {
             _handler.onQuote(seqno, symbol, ob, level);
         }
         
-        void deleteOrder(const uint32_t& seqno, const std::string_view& symbol, const uint64_t& orderId)
+        void deleteOrder(const uint32_t seqno, const std::string_view symbol, const uint64_t orderId)
         {
             //find the order
             auto itr = _orderIdToOrderMap.find(orderId);
@@ -97,7 +81,7 @@ class Exchange {
             _handler.onQuote(seqno, symbol, ob, level);
         }
 
-        void executeOrder(const uint32_t& seqno, const std::string_view& symbol, const uint64_t& orderId, const uint64_t& tradedQuantity)
+        void executeOrder(const uint32_t seqno, const std::string_view symbol, const uint64_t orderId, const uint64_t tradedQuantity)
         {
             //find the order
             auto itr = _orderIdToOrderMap.find(orderId);
