@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "parser.hpp"
 #include <vector>
+#include <memory>
 
 struct TestHandler {
     public:

@@ -18,39 +18,38 @@ class Parser {
             {
                 char buf[4];
                 _s.read(buf, 4);
-                uint32_t seqno = ReadU32(buf);
+                uint32_t seqno = Read<uint32_t>(buf);
                 memset(buf, 0, 4);
                 _s.read(buf, 4);
-                uint32_t size = ReadU32(buf);
+                uint32_t size = Read<uint32_t>(buf);
                 
                 if(seqno == 0 || size == 0) // something wrong with the data
                     return;
                 
-                unique_ptr<char[]> tmp(new char[size]{0}); //prepare a buffer for storing each message
-                _s.read( tmp.get(), size );
+                unique_ptr<char[]> msg = make_unique<char[]>(size); //prepare a buffer for storing each message                
+                _s.read( msg.get(), size );                
 
-                parse(seqno, size, tmp.get());
+                parse(seqno, size, std::move(msg));
             }
         }
-        void parse(uint32_t seqno, uint32_t size, const char* buf)
-        {   
-                                          
-            char type;
-            type = buf[0];
+        void parse(uint32_t seqno, uint32_t size, unique_ptr<char[]> msg)
+        {                                             
+            const char type = msg[0];
+            const char* buf = msg.get() + 1;
             
             switch(type)
             {
                 case 'A':
-                    addOrder(buf + 1, seqno, size - 1);
+                    addOrder(buf, seqno, size - 1);
                     break;
                 case 'U':
-                    updateOrder(buf + 1, seqno, size - 1);
+                    updateOrder(buf, seqno, size - 1);
                     break;
                 case 'D':
-                    deleteOrder(buf + 1, seqno, size - 1);
+                    deleteOrder(buf, seqno, size - 1);
                     break;
                 case 'E':
-                    executeOrder(buf + 1, seqno, size - 1);
+                    executeOrder(buf, seqno, size - 1);
                     break;
                 default:
                     cout << " Got invalid type: " << type << endl;
@@ -62,11 +61,11 @@ class Parser {
             const char *curBuf = buf;
             
             //Get the symbol            
-            string_view symbol{buf, 3};
+            string_view symbol{curBuf, 3};
             curBuf += 3;
             
             //Get the order id
-            uint64_t orderId = ReadU64(curBuf);
+            uint64_t orderId = Read<uint64_t>(curBuf);
             curBuf += 8;
             
             //Get the side
@@ -77,11 +76,11 @@ class Parser {
             curBuf += 3;
 
             //Get quantity
-            uint64_t quantity = ReadU64(curBuf);
+            uint64_t quantity = Read<uint64_t>(curBuf);
             curBuf += 8;
 
             //Get price
-            int32_t price = Read32(curBuf);
+            int32_t price = Read<int32_t>(curBuf);
             curBuf += 4;
 
             //Skip the pad
@@ -104,7 +103,7 @@ class Parser {
             curBuf += 3;
             
             //Get the order id
-            uint64_t orderId = ReadU64(curBuf);
+            uint64_t orderId = Read<uint64_t>(curBuf);
             curBuf += 8;
             //Get the side
             char side = curBuf[0];
@@ -114,11 +113,11 @@ class Parser {
             curBuf += 3;
 
             //Get quantity
-            uint64_t quantity = ReadU64(curBuf);
+            uint64_t quantity = Read<uint64_t>(curBuf);
             curBuf += 8;
 
             //Get price
-            int32_t price = Read32(curBuf);
+            int32_t price = Read<int32_t>(curBuf);
             curBuf += 4;
 
             //Read the pad
@@ -142,7 +141,7 @@ class Parser {
             curBuf += 3;
             
             //Get the order id
-            uint64_t orderId = ReadU64(curBuf);
+            uint64_t orderId = Read<uint64_t>(curBuf);
             curBuf += 8;
             //Get the side
             char side = curBuf[0];
@@ -169,7 +168,7 @@ class Parser {
             curBuf += 3;
             
             //Get the order id
-            uint64_t orderId = ReadU64(curBuf);
+            uint64_t orderId = Read<uint64_t>(curBuf);
             curBuf += 8;
             //Get the side
             char side = curBuf[0];
@@ -178,7 +177,7 @@ class Parser {
             //Read the pad                      
             curBuf += 3;
             //Get the traded quantity
-            uint64_t tradedQuantity = ReadU64(curBuf);
+            uint64_t tradedQuantity = Read<uint64_t>(curBuf);
             curBuf += 8;
 
             if(curBuf - buf != size)
@@ -190,7 +189,11 @@ class Parser {
             _exchange.executeOrder(seqno, symbol, orderId, tradedQuantity);
         }
     private:
-        uint32_t ReadU32(const void* buf)
+        template<typename T>
+        T Read(const void* buf) {
+            return *static_cast<const T *>(buf);
+        }
+        /*uint32_t ReadU32(const void* buf)
         {
             if constexpr (std::endian::native == std::endian::big)
             {
@@ -242,7 +245,7 @@ class Parser {
             {
                 return std::numeric_limits<uint64_t>::max();
             }
-        }
+        }*/
         istream& _s;
         Exchange<Handler>& _exchange;
 };

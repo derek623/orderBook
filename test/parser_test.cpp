@@ -10,8 +10,10 @@ TEST_P(ParserParameterizedTestFixture, ParserTest)
 
     ParserParameterizedTestCases c = GetParam();
     for(auto o : c.messages)
-    {
-        p.parse(std::get<0>(o), std::get<1>(o), std::get<2>(o));
+    {        
+        std::unique_ptr<char[]> buf = std::make_unique<char[]>(std::get<1>(o));
+        memcpy(buf.get(), std::get<2>(o), std::get<1>(o));
+        p.parse(std::get<0>(o), std::get<1>(o), std::move(buf));        
     }
 
     EXPECT_EQ(th._ob.getBuy().size(), c.buyLevels.size());
